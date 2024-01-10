@@ -9,5 +9,14 @@ return [
         'cache' => [
             'class' => \yii\caching\FileCache::class,
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                '' => 'site/index',
+                '<action>' => 'site/<action>',
+                '<controller>/<action>' => '<controller>/<action>',
+            ],
+        ],
     ],
 ];
