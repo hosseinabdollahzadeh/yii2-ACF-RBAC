@@ -46,8 +46,8 @@ class ResetPasswordForm extends Model
     public function rules()
     {
         return [
-            ['password', 'passwordConfirm', 'required'],
-            ['password', 'passwordConfirm', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+            [['password', 'passwordConfirm'], 'required'],
+            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
             ['passwordConfirm', 'compare', 'compareAttribute' => 'password'],
         ];
     }
