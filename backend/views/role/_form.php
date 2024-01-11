@@ -55,6 +55,8 @@ use yii\widgets\ActiveForm;
                     ?>
                 </div>
             </div>
+            <hr>
+            <br>
         <?php
         endforeach;
         ?>

@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use backend\models\Role;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,8 +23,49 @@ class RoleController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['index','create', 'view', 'update', 'delete'],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index','create', 'view', 'update', 'delete'],
+                            'matchCallback' => function ($rule, $action) {
+                                if (!empty(Yii::$app->user->identity->username) && Yii::$app->user->identity->username === 'admin') { // allow access to default user as admin of user crud
+                                    return true;
+                                }
+                                return false;
+                            }
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['view'],
+                            'roles' => ['view_role'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['index'],
+                            'roles' => ['index_role'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['create'],
+                            'roles' => ['add_role'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['update'],
+                            'roles' => ['edit_role'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['delete'],
+                            'roles' => ['delete_role'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],

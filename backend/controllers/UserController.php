@@ -2,8 +2,10 @@
 
 namespace backend\controllers;
 
-use common\models\User;
+use backend\models\User;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,8 +23,49 @@ class UserController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['index','create', 'view', 'update', 'delete'],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index','create', 'view', 'update', 'delete'],
+                            'matchCallback' => function ($rule, $action) {
+                                if (!empty(Yii::$app->user->identity->username) && Yii::$app->user->identity->username === 'admin') { // allow access to default user as admin of user crud
+                                    return true;
+                                }
+                                return false;
+                            }
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['view'],
+                            'roles' => ['view_user'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['index'],
+                            'roles' => ['index_user'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['create'],
+                            'roles' => ['add_user'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['update'],
+                            'roles' => ['edit_user'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['delete'],
+                            'roles' => ['delete_user'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -78,9 +121,10 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
+        $model->scenario = 'new_user';
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post()) && $model->validate() && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -102,8 +146,9 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = 'edit_user';
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->validate() && $model->update()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

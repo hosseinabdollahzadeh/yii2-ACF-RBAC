@@ -127,11 +127,19 @@ class Role extends \yii\db\ActiveRecord
     private function all_roles()
     {
         return [
-            'user' => [
-                ['name' => 'admin_user', 'checked' => 0, 'label' => 'Admin User'],
+            'User' => [
+                ['name' => 'view_user', 'checked' => 0, 'label' => 'View User'],
+                ['name' => 'index_user', 'checked' => 0, 'label' => 'Index User'],
                 ['name' => 'add_user', 'checked' => 0, 'label' => 'Add User'],
                 ['name' => 'edit_user', 'checked' => 0, 'label' => 'Edit User'],
                 ['name' => 'delete_user', 'checked' => 0, 'label' => 'Delete User'],
+            ],
+            'Role' => [
+                ['name' => 'view_role', 'checked' => 0, 'label' => 'View Role'],
+                ['name' => 'index_role', 'checked' => 0, 'label' => 'Index Role'],
+                ['name' => 'add_role', 'checked' => 0, 'label' => 'Add Role'],
+                ['name' => 'edit_role', 'checked' => 0, 'label' => 'Edit Role'],
+                ['name' => 'delete_role', 'checked' => 0, 'label' => 'Delete Role'],
             ],
         ];
     }

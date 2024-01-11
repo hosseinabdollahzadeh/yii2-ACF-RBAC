@@ -16,26 +16,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'name' => $model->name], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'name' => $model->name], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php if (Yii::$app->user->can('edit_role') || Yii::$app->user->identity->username === 'admin') {
+            echo Html::a(Yii::t('app', 'Update'), ['update', 'name' => $model->name], ['class' => 'btn btn-primary']);
+        } ?>
+        <?php if (Yii::$app->user->can('delete_role') || Yii::$app->user->identity->username === 'admin') {
+            echo Html::a(Yii::t('app', 'Delete'), ['delete', 'name' => $model->name], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]);
+        } ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
+    <?= DetailView::widget(['model' => $model,
         'attributes' => [
             'name',
-            'type',
+//            'type',
             'description:ntext',
-            'rule_name',
-            'data',
-            'created_at',
-            'updated_at',
+//            'rule_name',
+//            'data',
+//            'created_at',
+//            'updated_at',
         ],
     ]) ?>
 
