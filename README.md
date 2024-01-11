@@ -3,58 +3,84 @@
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
     </a>
     <h1 align="center">Yii 2 Advanced Project Template</h1>
+    <h1 align="center">ACF - RBAC</h1>
     <br>
 </p>
 
-Yii 2 Advanced Project Template is a skeleton [Yii 2](https://www.yiiframework.com/) application best for
-developing complex Web applications with multiple tiers.
 
-The template includes three tiers: front end, back end, and console, each of which
-is a separate Yii application.
+### Clone the Repository
+```bash
+git clone [repository_url]
+```
+### Install Dependencies
+```bash
+composer install
+```
+### Initialize the Application
+```bash
+./init
+```
+### Database Configuration
+Configure your database connection in common/config/main-local.php.
 
-The template is designed to work in a team development environment. It supports
-deploying the application in different environments.
+### Run Migrations
+```bash
+php yii migrate
+php yii migrate --migrationPath=@yii/rbac/migrations/
+```
+### Backend Access
+#### Default Admin User
+Username: admin
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
+Password: admin
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![build](https://github.com/yiisoft/yii2-app-advanced/workflows/build/badge.svg)](https://github.com/yiisoft/yii2-app-advanced/actions?query=workflow%3Abuild)
+1. After logging in, you can create roles with custom permissions from Roles menu.
+2. Create users and assign specific roles to them from Users menu.
 
-DIRECTORY STRUCTURE
--------------------
+### Frontend Access
+1. Normal users can sign up on the frontend.
+2. Confirm their email verification through the links sent to their email.
+
+### Mailer Configuration
+
+Make sure to configure the mailer in common/config/main-local.php:
+
+```bash
+return [
+    // Other configurations...
+
+    'components' => [
+        // Other components...
+
+        'mailer' => [
+            'class' => \yii\symfonymailer\Mailer::class,
+            'viewPath' => '@common/mail',
+            'useFileTransport' => false,
+            'transport' => [
+                'scheme' => 'smtp',
+                'host' => 'sandbox.smtp.mailtrap.io', // for example
+                'username' => 'your_smtp_username',
+                'password' => 'your_smtp_password',
+                'port' => 587,
+                'encryption' => 'tls',
+            ],
+        ],
+    ],
+
+    // Other configurations...
+];
 
 ```
-common
-    config/              contains shared configurations
-    mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
-    tests/               contains tests for common classes    
-console
-    config/              contains console configurations
-    controllers/         contains console controllers (commands)
-    migrations/          contains database migrations
-    models/              contains console-specific model classes
-    runtime/             contains files generated during runtime
-backend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains backend configurations
-    controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for backend application    
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-frontend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains frontend configurations
-    controllers/         contains Web controller classes
-    models/              contains frontend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for frontend application
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-    widgets/             contains frontend widgets
-vendor/                  contains dependent 3rd-party packages
-environments/            contains environment-based overrides
+Make sure to replace 'your_smtp_host', 'your_smtp_username', and 'your_smtp_password' with your actual SMTP server details.
+
+### Dockerization
+To run the project using Docker, execute the following command:
+```bash
+docker-compose up -d
 ```
+This will start the Yii2 application and its dependencies in Docker containers. Access the application at http://localhost:port, where port is the specified port in your docker-compose.yml file.
+
+### Contact Information
+Feel free to reach out:
+
+- Email: abdollahzadeh.hossein@gmail.com
